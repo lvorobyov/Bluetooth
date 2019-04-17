@@ -16,8 +16,7 @@ int main() {
     try {
         server_socket bth_socket(L"Text service via Bluetooth", &SERVICE_ID);
         signal(SIGINT, [](int sig) { active = false; });
-        u_long mode = 0;
-        ioctlsocket(bth_socket.raw_socket(), FIONBIO, &mode);
+        bth_socket.set_blocking(false);
         fd_set fds;
         FD_ZERO(&fds);
         FD_SET(bth_socket.raw_socket(), &fds);
