@@ -1,9 +1,11 @@
 #include <iostream>
 #include <bth/server_socket.h>
+#include <net/sockets_set.h>
 #include <csignal>
 
 using namespace std;
 using namespace csoi::bth;
+using csoi::net::sockets_set;
 
 // {D3133043-6F35-4FA2-9BC4-D3593430B102}
 static const GUID SERVICE_ID =
@@ -17,12 +19,11 @@ int main() {
         server_socket bth_socket(L"Text service via Bluetooth", &SERVICE_ID);
         signal(SIGINT, [](int sig) { active = false; });
         bth_socket.set_blocking(false);
-        fd_set fds;
-        FD_ZERO(&fds);
-        FD_SET(bth_socket.raw_socket(), &fds);
+        sockets_set socks;
+        socks.set(bth_socket);
         TIMEVAL timeout{0,500};
         do {
-            int s = select(0, &fds, nullptr, nullptr, &timeout);
+            int s = select(0, &socks, nullptr, nullptr, &timeout);
             if (s == SOCKET_ERROR)
                 throw logic_error("select error");
             if (s == 0)
