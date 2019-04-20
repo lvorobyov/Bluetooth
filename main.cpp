@@ -21,21 +21,21 @@ int main() {
         signal(SIGINT, [](int sig) { active = false; });
         bth_socket.set_blocking(false);
         sockets_set socks;
-        socks.set(bth_socket);
         TIMEVAL timeout{0,500};
         do {
+            socks.set(bth_socket);
             int s = select(0, &socks, nullptr, nullptr, &timeout);
             if (s == SOCKET_ERROR)
                 throw logic_error("select error");
             if (s == 0)
                 continue;
+            socks.clear();
             client_socket client = bth_socket.accept();
             cout << client.get_address().btAddr << endl;
             char buffer[max_len];
             while (client.recv(buffer, max_len, 0))
                 cout << buffer;
             cout << endl;
-            client.close();
         } while (active);
     } catch (exception const& ex) {
         cerr << ex.what() << endl;
