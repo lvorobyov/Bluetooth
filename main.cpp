@@ -15,7 +15,7 @@ static const GUID SERVICE_ID =
 int main() {
     int status = EXIT_SUCCESS;
     static volatile sig_atomic_t active = true;
-    static const int max_len = 512;
+    static const int max_len = 80;
     try {
         server_socket bth_socket(L"Text service via Bluetooth", &SERVICE_ID);
         signal(SIGINT, [](int sig) { active = false; });
@@ -30,9 +30,11 @@ int main() {
             if (s == 0)
                 continue;
             client_socket client = bth_socket.accept();
+            cout << client.get_address().btAddr << endl;
             char buffer[max_len];
-            client.recv(buffer, max_len, 0);
-            cout << "C: " << buffer << endl;
+            while (client.recv(buffer, max_len, 0))
+                cout << buffer;
+            cout << endl;
             client.close();
         } while (active);
     } catch (exception const& ex) {
