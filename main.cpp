@@ -21,6 +21,7 @@ static const GUID SERVICE_ID =
 int main() {
     int status = EXIT_SUCCESS;
     static volatile sig_atomic_t active = true;
+    signal(SIGINT, [](int sig) { active = false; });
     static const int max_len = 80;
     spdlog::create<spdlog::sinks::stderr_sink_st>("stderr_log");
     spdlog::create<spdlog::sinks::basic_file_sink_st>("app_log", "app.log");
@@ -30,7 +31,7 @@ int main() {
         signal(SIGINT, [](int sig) { active = false; });
         bth_socket.set_blocking(false);
         sockets_set socks;
-        TIMEVAL timeout{0,500};
+        TIMEVAL timeout{0,15000};
         do {
             socks.set(bth_socket);
             int s = select(0, &socks, nullptr, nullptr, &timeout);
@@ -46,6 +47,7 @@ int main() {
                 _tprintf(_T("%ls"), buffer);
             _tprintf(_T("\n"));
         } while (active);
+        _tprintf(_T("Bye!\n"));
     } catch (exception const& ex) {
         spdlog::error(ex.what());
         status = EXIT_FAILURE;
