@@ -29,7 +29,6 @@ int main() {
     signal(SIGINT, [](int sig) { active = false; });
     static const int max_len = 80;
     _setmode(_fileno(stdout), _O_U8TEXT);
-    _tprintf(_T("Ядрон батон!\n"));
     spdlog::create<spdlog::sinks::stderr_sink_st>("stderr_log");
     spdlog::create<spdlog::sinks::basic_file_sink_st>("app_log", "app.log");
     spdlog::set_default_logger(spdlog::get("app_log"));
