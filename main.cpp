@@ -43,7 +43,7 @@ int main() {
             client_socket client = bth_socket.accept();
             spdlog::info("connected {:12x}", client.get_address().btAddr);
             TCHAR buffer[max_len];
-            while (client.recv((char*)buffer, max_len, 0))
+            while (client.recv(reinterpret_cast<char *>(buffer), max_len, 0))
                 _tprintf(_T("%ls"), buffer);
             _tprintf(_T("\n"));
         } while (active);
