@@ -18,6 +18,10 @@ using csoi::net::sockets_set;
 static const GUID SERVICE_ID =
 { 0xd3133043, 0x6f35, 0x4fa2, { 0x9b, 0xc4, 0xd3, 0x59, 0x34, 0x30, 0xb1, 0x2 } };
 
+#ifdef _WIN32
+#define mbstowcs(dst,src,len) \
+    MultiByteToWideChar(CP_UTF8, 0, src, len, dst, len)
+#endif
 
 int main() {
     int status = EXIT_SUCCESS;
