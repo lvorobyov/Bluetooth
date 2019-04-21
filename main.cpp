@@ -8,6 +8,7 @@
 #include <spdlog/spdlog.h>
 #include <spdlog/sinks/stdout_sinks.h>
 #include <spdlog/sinks/basic_file_sink.h>
+#include <fcntl.h>
 
 using namespace std;
 using namespace csoi::bth;
@@ -23,6 +24,8 @@ int main() {
     static volatile sig_atomic_t active = true;
     signal(SIGINT, [](int sig) { active = false; });
     static const int max_len = 80;
+    _setmode(_fileno(stdout), _O_U8TEXT);
+    _tprintf(_T("Ядрон батон!\n"));
     spdlog::create<spdlog::sinks::stderr_sink_st>("stderr_log");
     spdlog::create<spdlog::sinks::basic_file_sink_st>("app_log", "app.log");
     spdlog::set_default_logger(spdlog::get("app_log"));
