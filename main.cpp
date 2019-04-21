@@ -42,9 +42,12 @@ int main() {
             socks.clear();
             client_socket client = bth_socket.accept();
             spdlog::info("connected {:12x}", client.get_address().btAddr);
-            TCHAR buffer[max_len];
-            while (client.recv(reinterpret_cast<char *>(buffer), max_len, 0))
-                _tprintf(_T("%ls"), buffer);
+            char buffer[max_len];
+            TCHAR message[max_len];
+            while (client.recv(buffer, max_len, 0)) {
+                mbstowcs(message, buffer, max_len);
+                _tprintf(_T("%ls"), message);
+            }
             _tprintf(_T("\n"));
         } while (active);
         _tprintf(_T("Bye!\n"));
