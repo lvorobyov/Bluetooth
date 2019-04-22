@@ -54,7 +54,7 @@ int main() {
             message.clear();
             char buffer[max_len];
             int len, c, bias = 0;
-            while ((len = bias + client.recv(buffer + bias, max_len - bias, 0))) {
+            while ((len = bias + client.recv(buffer + bias, max_len - bias, 0)) > 0) {
                 mbstowcs_s(c, nullptr, 0, buffer, len);
                 int sz = message.size();
                 message.resize(sz + c);
