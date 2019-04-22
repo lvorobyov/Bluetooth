@@ -1,0 +1,1 @@
+add_executable(mb2wc mb2wc_test.cpp)

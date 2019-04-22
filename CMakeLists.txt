@@ -7,3 +7,5 @@ add_definitions(-D_UNICODE -DUNICODE)
 
 add_executable(app main.cpp)
 target_link_libraries(app ws2_32 bthprops)
+
+add_subdirectory(test)
