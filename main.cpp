@@ -51,6 +51,7 @@ int main() {
             socks.clear();
             client_socket client = bth_socket.accept();
             spdlog::info("connected {:12x}", client.get_address().btAddr);
+            message.clear();
             char buffer[max_len];
             int len, c, bias = 0;
             while ((len = client.recv(buffer + bias, max_len - bias, 0))) {
@@ -60,6 +61,7 @@ int main() {
                 mbstowcs_s(c, &message[sz], c, buffer, len);
                 bias = 0;
                 if (message.back() == 0xFFFD) {
+                    message.pop_back();
                     int i = len;
                     char ch;
                     do {
@@ -71,6 +73,7 @@ int main() {
                     memcpy(buffer, buffer + len - bias, bias);
                 }
             }
+            message.push_back(L'\0');
             _tprintf(_T("%ls\n"), message.data());
         } while (active);
         _tprintf(_T("Bye!\n"));
