@@ -24,15 +24,15 @@ static const GUID SERVICE_ID =
     ret = MultiByteToWideChar(CP_UTF8, 0, src, len, dst, sz)
 #endif
 
-int main() {
+int main(int argc, char* argv[]) {
     int status = EXIT_SUCCESS;
     static volatile sig_atomic_t active = true;
     signal(SIGINT, [](int sig) { active = false; });
     static const int max_len = 80;
     _setmode(_fileno(stdout), _O_U8TEXT);
-    spdlog::create<spdlog::sinks::stderr_sink_st>("stderr_log");
     spdlog::create<spdlog::sinks::basic_file_sink_st>("app_log", "app.log");
     spdlog::set_default_logger(spdlog::get("app_log"));
+    spdlog::set_level(spdlog::level::trace);
     vector<TCHAR> message;
     message.reserve(max_len);
     try {
@@ -55,6 +55,7 @@ int main() {
             char buffer[max_len];
             int len, c, bias = 0;
             while ((len = bias + client.recv(buffer + bias, max_len - bias, 0)) > 0) {
+                spdlog::trace("received {} bias {}", len, bias);
                 mbstowcs_s(c, nullptr, 0, buffer, len);
                 int sz = message.size();
                 message.resize(sz + c);
