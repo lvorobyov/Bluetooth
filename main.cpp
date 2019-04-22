@@ -28,7 +28,7 @@ int main(int argc, char* argv[]) {
     int status = EXIT_SUCCESS;
     static volatile sig_atomic_t active = true;
     signal(SIGINT, [](int sig) { active = false; });
-    static const int max_len = 80;
+    static const int max_len = 512;
     _setmode(_fileno(stdout), _O_U8TEXT);
     spdlog::create<spdlog::sinks::basic_file_sink_st>("app_log", "app.log");
     spdlog::set_default_logger(spdlog::get("app_log"));
